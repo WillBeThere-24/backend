@@ -1,7 +1,7 @@
 import { ENVIRONMENT } from './common/config/environment.js'
 import express from 'express'
 import AppError from './common/utils/appError.js'
-import { setRoutes } from './modules/routes/index.js'
+import appRouter from '../src/modules/routes/index.js'
 import {
     catchAsync,
     handleError,
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 /**
  * Initialize routes
  */
-app.use('/', setRoutes())
+app.use('/api/v1', appRouter)
 
 // catch 404 and forward to error handler
 app.all(
@@ -77,6 +77,6 @@ app.get('*', (req, res) =>
  * Bootstrap server
  */
 app.listen(port, () => {
-    console.log('=> ' + appName + 'app listening on port' + port + '!')
+    console.log('=> ' + appName + ' app listening on port ' + port + '!')
     connectDb()
 })
