@@ -41,6 +41,7 @@ app.use(
 // append request time to all request
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString()
+    req.subdomain = req.get('host').split('.')[0]
     next()
 })
 
