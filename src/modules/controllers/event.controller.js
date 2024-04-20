@@ -6,8 +6,8 @@ import { GuestModel } from '../schemas/guest.schema.js';
 import { UserModel } from '../schemas/user.schema.js';
 
 export const createEvent = catchAsync(async (req, res) => {
-  // Endpoint to create event
-    const checkExisting = await EventModel.findOne({'name': req.body.name, 'user': req.body.user});
+    const { user } = req;
+    const checkExisting = await EventModel.findOne({'name': req.body.name, 'user': user});
     const checkSubdomain = await EventModel.findOne({'subdomain': req.body.subdomain});
     
     // Please assist with the validations

@@ -1,7 +1,10 @@
 import { Router } from 'express'
 import { createEvent, myEvent, inviteGuest, eventGuests, rsvpEvent, confirmRSVP, editEvent, deleteEvent } from '../controllers/event.controller.js'
+import { protect } from "../../common/middlewares/protect.js";
 
 const eventRouter = Router()
+
+eventRouter.use(protect);
 
 eventRouter.post('/', createEvent)
 eventRouter.get('/', myEvent)
