@@ -1,15 +1,24 @@
-import AppError from '../../common/utils/appError.js'
 import { catchAsync } from '../../common/utils/errorHandler.js'
+import { UserModel } from '../schemas/user.schema.js'
+import { AppResponse } from '../../common/utils/appResponse.js'
+import { UserEntityTransformer } from '../../common/transformers/entityTransformer.js';
 
 export const getUser = catchAsync(async (req, res) => {
-    const user = {
-        name: 'jc',
-        email: 'coder',
-    }
+    const { user } = req;
+    return AppResponse(
+      res,
+      200,
+      UserEntityTransformer(user),
+      "Current user fetched successfully",
+    );
+});
 
-    if (!user) {
-        throw new AppError('User not found', 404)
-    }
+export const deleteUser = catchAsync(async (req, res) => {
+    const { user } = req;
 
-    return res.status(200).json(user)
-})
+    await UserModel.findByIdAndDelete(user);
+
+    return AppResponse(res, 204, null, "User deleted successfully");
+});
+  
+

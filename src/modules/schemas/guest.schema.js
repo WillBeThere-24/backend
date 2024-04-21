@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const inviteeSchema = new mongoose.Schema(
+const guestSchema = new mongoose.Schema(
     {
         firstName: {
             type: String,
@@ -22,11 +22,19 @@ const inviteeSchema = new mongoose.Schema(
             required: true,
             ref: 'Event',
         },
-        plus_ones: {
-            type: Array,
-        },
+        plus_ones: [
+            {
+              firstName: {
+                type: String,
+                required: true,
+              },
+              lastName: {
+                type: String,
+              },
+            },
+          ],
     },
     { timestamps: true }
 )
 
-export const InviteeModel = mongoose.model('Invitee', inviteeSchema)
+export const GuestModel = mongoose.model('Guest', guestSchema)

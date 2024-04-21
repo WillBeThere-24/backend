@@ -23,6 +23,11 @@ const eventSchema = new mongoose.Schema(
             required: true,
             ref: 'User',
         },
+        isPrivate: {
+            type: Boolean,
+            required: true,
+            default: true,
+        },
         start: {
             type: Date,
             required: true,

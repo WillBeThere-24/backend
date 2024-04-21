@@ -1,8 +1,12 @@
 import { Router } from 'express'
-import { getUser } from '../controllers/user.controller.js'
+import { getUser, deleteUser } from '../controllers/user.controller.js'
+import { protect } from "../../common/middlewares/protect.js";
 
-const userRouter = Router()
+export const userRouter = Router();
+
+userRouter.use(protect);
 
 userRouter.get('/', getUser)
+userRouter.delete('/', deleteUser)
 
 export default userRouter
