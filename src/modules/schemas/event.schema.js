@@ -23,10 +23,6 @@ const eventSchema = new mongoose.Schema(
             required: true,
             ref: 'User',
         },
-        subdomain: {
-            type: String,
-            required: true,
-        },
         isPrivate: {
             type: Boolean,
             required: true,

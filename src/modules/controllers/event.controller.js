@@ -8,17 +8,10 @@ import { UserModel } from '../schemas/user.schema.js';
 export const createEvent = catchAsync(async (req, res) => {
     const { user } = req;
     const checkExisting = await EventModel.findOne({'name': req.body.name, 'user': user});
-    const checkSubdomain = await EventModel.findOne({'subdomain': req.body.subdomain});
-    
-    // Please assist with the validations
 
     // Validation start
     if (checkExisting) {
       throw new AppError('Event already exists', 409);
-    }
-
-    if (checkSubdomain) {
-      throw new AppError('Subdomain already exists. Please use another subdomain.', 409);
     }
 
     // if (req.body.start > Date()) {
@@ -30,23 +23,28 @@ export const createEvent = catchAsync(async (req, res) => {
     // }
     // Validation End
 
-    const event = await EventModel.create(req.body);
+    const event = await EventModel.create({
+      user: user,
+      ...req.body
+    });
 
     return AppResponse(res, 201, "Event Created Successfully", event)
 })
 
-export const myEvent = catchAsync(async (req, res) => {
-  const user = await UserModel.findOne({'_id': req.query.id}) // Replace with auth user
-  const subdomain = req.subdomain
+export const myEvents = catchAsync(async (req, res) => {
+  const { user } = req
 
-  if (subdomain == req.get('host')) {
-    const events = await EventModel.find({'user': user})
+  const events = await EventModel.find({'user': user})
 
-    return AppResponse(res, 200, "", events)
-  } 
+  return AppResponse(res, 200, "", events);
+})
 
-  const event = await EventModel.findOne({'user': user, 'subdomain': req.subdomain}) // Check if event belongs to user
-  
+export const getEvent = catchAsync(async (req, res) => {
+  const { user } = req
+  const eventID = req.params.id
+
+  const event = await EventModel.findOne({'user': user, '_id': eventID})
+
   if (!event) {
     throw new AppError('Event does not exists', 409);
   }
@@ -55,9 +53,10 @@ export const myEvent = catchAsync(async (req, res) => {
 })
 
 export const inviteGuest = catchAsync(async (req, res) => {
-  const user = await UserModel.findOne({'_id': req.query.id}) // Replace with auth user
-  const event = await EventModel.findOne({'user': user, 'subdomain': req.subdomain}) // Check if event belongs to user
-  
+  const { user } = req
+  const eventID = req.params.id
+  const event = await EventModel.findOne({'user': user, '_id': eventID})
+
   if (!event) {
     throw new AppError('Event does not exists', 409);
   }
@@ -79,9 +78,10 @@ export const inviteGuest = catchAsync(async (req, res) => {
 })
 
 export const eventGuests = catchAsync(async (req, res) => {
-  const user = await UserModel.findOne({'_id': req.query.id}) // Replace with auth user
-  const event = await EventModel.findOne({'user': user, 'subdomain': req.subdomain}) // Check if event belongs to user
-  
+  const { user } = req
+  const eventID = req.params.id
+  const event = await EventModel.findOne({'user': user, '_id': eventID})
+
   if (!event) {
     throw new AppError('Event does not exists', 409);
   }
@@ -92,29 +92,29 @@ export const eventGuests = catchAsync(async (req, res) => {
 })
 
 export const rsvpEvent = catchAsync(async (req, res) => {
-  const event = await EventModel.findOne({'subdomain': req.subdomain});
-  
+  const event = await EventModel.findById(req.params.id)
+
   if (!event) {
     throw new AppError('Event does not exists', 400);
   }
 
-  const guest = await GuestModel.findOne({'event': event, 'email': req.query.email})
-
+  const guest = await GuestModel.findOne({'event': event, '_id': req.query.guest})
+  
   if (event.isPrivate && !guest) {
     throw new AppError('This event is private.', 400);
   }
 
-  return AppResponse(res, 200, "", {"event": event,"guest": guest});
+  return AppResponse(res, 200, "", {"event": event, "guest": guest});
 })
 
 export const confirmRSVP = catchAsync(async (req, res) => {
-  const event = await EventModel.findOne({'subdomain': req.subdomain});
-  
+  const event = await EventModel.findById(req.params.id)
+
   if (!event) {
-    throw new AppError('Event does not exists', 409);
+    throw new AppError('Event does not exists', 400);
   }
 
-  const guest = await GuestModel.findOne({'event': event, 'email': req.query.email})
+  const guest = await GuestModel.findOne({'event': event, '_id': req.query.guest})
 
   if (event.isPrivate && !guest) {
     throw new AppError('This event is private.', 400);
@@ -140,9 +140,9 @@ export const confirmRSVP = catchAsync(async (req, res) => {
 })
 
 export const editEvent = catchAsync(async (req, res) => {
-  // Check auth user
-  const event = await EventModel.findOne({'user': req.body.user, 'subdomain': req.subdomain}) // Check if event belongs to user
-  
+  const { user } = req
+  const event = await EventModel.findOne({'user': user, '_id': req.params.id})
+
   if (!event) {
     throw new AppError('Event does not exists', 409);
   }
@@ -153,9 +153,9 @@ export const editEvent = catchAsync(async (req, res) => {
 })
 
 export const deleteEvent = catchAsync(async (req, res) => {
-  // Check auth user
-  const event = await EventModel.findOne({'user': req.query.id, 'subdomain': req.subdomain}) // Check if event belongs to user
-  
+  const { user } = req
+  const event = await EventModel.findOne({'user': user, '_id': req.params.id})
+
   if (!event) {
     throw new AppError('Event does not exists', 409);
   }
