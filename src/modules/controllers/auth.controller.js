@@ -26,7 +26,7 @@ export const register = catchAsync(async (req, res) => {
     const newUser = await UserModel.create(req.body);
 
   // Return success response
-  return AppResponse(res, 201, UserEntityTransformer(newUser), 'Registration successful');
+  return AppResponse(res, 201, 'Registration successful', UserEntityTransformer(newUser));
 })
 
 export const login = catchAsync(async (req, res) => {
@@ -68,5 +68,5 @@ export const login = catchAsync(async (req, res) => {
     const updatedUser = await UserModel.findByIdAndUpdate(user.id, {refreshToken});
   
     // Return success response
-    return AppResponse(res, 200, UserEntityTransformer(updatedUser), 'Registration successful');
+    return AppResponse(res, 200, 'Login successful', UserEntityTransformer(updatedUser));
 });  

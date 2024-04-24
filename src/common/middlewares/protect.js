@@ -1,9 +1,11 @@
 import { authenticate } from '../utils/authenticate.js';
 import { catchAsync } from '../utils/errorHandler.js';
+import AppError from '../../common/utils/appError.js';
 import { setCookie } from '../utils/helper.js';
 
 export const protect = catchAsync(async (req, res, next) => {
-  const { accessToken, refreshToken } =
+  try {
+    const { accessToken, refreshToken } =
     req.cookies ||
     req.headers['cookie'].split(';').reduce((res, c) => {
       const [key, val] = c.trim().split('=').map(decodeURIComponent);
@@ -13,12 +15,15 @@ export const protect = catchAsync(async (req, res, next) => {
         return Object.assign(res, { [key]: val });
       }
     }, {});
-  const { currentUser, newAccessToken } = await authenticate(accessToken, refreshToken);
-  if (newAccessToken) {
-    setCookie(res, 'accessToken', newAccessToken, { maxAge: 15 * 60 * 1000 });
+    const { currentUser, newAccessToken } = await authenticate(accessToken, refreshToken);
+    if (newAccessToken) {
+      setCookie(res, 'accessToken', newAccessToken, { maxAge: 15 * 60 * 1000 });
+    }
+    if (currentUser) {
+      req.user = currentUser;
+    }
+    next();
+  } catch {
+    throw new AppError('Login Error. Please log in again.', 409);
   }
-  if (currentUser) {
-    req.user = currentUser;
-  }
-  next();
 });
