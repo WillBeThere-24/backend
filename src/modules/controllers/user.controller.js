@@ -8,8 +8,8 @@ export const getUser = catchAsync(async (req, res) => {
     return AppResponse(
       res,
       200,
-      UserEntityTransformer(user),
       "Current user fetched successfully",
+      UserEntityTransformer(user),
     );
 });
 
@@ -18,7 +18,7 @@ export const deleteUser = catchAsync(async (req, res) => {
 
     await UserModel.findByIdAndDelete(user);
 
-    return AppResponse(res, 204, null, "User deleted successfully");
+    return AppResponse(res, 204, "User deleted successfully", null);
 });
   
 

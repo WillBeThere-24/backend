@@ -22,6 +22,9 @@ const guestSchema = new mongoose.Schema(
             required: true,
             ref: 'Event',
         },
+        message: {
+            type: String,
+        },
         plus_ones: [
             {
               firstName: {
