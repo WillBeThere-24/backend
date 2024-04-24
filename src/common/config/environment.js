@@ -18,4 +18,9 @@ export const ENVIRONMENT = {
         ACCESS: process.env.ACCESS_JWT_EXPIRES_IN,
         REFRESH: process.env.REFRESH_JWT_EXPIRES_IN,
     },
+    CLOUDINARY: {
+        CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+        API_KEY: process.env.CLOUDINARY_CLOUD_API_KEY,
+        API_SECRET: process.env.CLOUDINARY_CLOUD_API_SECRET,
+    },
 }
