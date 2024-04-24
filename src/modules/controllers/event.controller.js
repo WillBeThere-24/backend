@@ -35,7 +35,7 @@ export const myEvents = catchAsync(async (req, res) => {
 
   const events = await EventModel.find({'user': user})
 
-  return AppResponse(res, 200, "", events);
+  return AppResponse(res, 200, "All events for user retrieved successfully", events);
 })
 
 export const getEvent = catchAsync(async (req, res) => {
