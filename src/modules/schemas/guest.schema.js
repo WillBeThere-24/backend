@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const guestSchema = new mongoose.Schema(
+let guestSchema = new mongoose.Schema(
     {
         firstName: {
             type: String,
@@ -39,5 +39,7 @@ const guestSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+
+guestSchema.index({ email: 1, event: 1 }, { unique: true });
 
 export const GuestModel = mongoose.model('Guest', guestSchema)
