@@ -60,20 +60,23 @@ export const inviteGuest = catchAsync(async (req, res) => {
     throw new AppError('Event does not exists', 409);
   }
 
-  const checkInvitee = await GuestModel.findOne({'email': req.body.email, 'event': event})
+  req.body.forEach(async (guest) => {
+    let checkGuest = await GuestModel.findOne({'email': guest.email, 'event': event})
 
-  if (checkInvitee) {
-    throw new AppError('Invite already sent to guest', 409);
-  }
-
-  const guest = await GuestModel.create({
-    ...req.body,
-    'event': event,
+    if (checkGuest) {
+      // Resend them a mail
+    } else {
+      GuestModel.create({
+        ...guest,
+        'event': event,
+      });
+  
+      // Send queue mail to guest
+    }
+    
   });
 
-  // Send mail to guest
-
-  return AppResponse(res, 201, "Guest has been sent an invite to your event", guest)
+  return AppResponse(res, 201, "Guest(s) has been sent an invite to your event", null);
 })
 
 export const eventGuests = catchAsync(async (req, res) => {
