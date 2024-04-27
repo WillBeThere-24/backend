@@ -2,11 +2,7 @@ import mongoose from 'mongoose'
 
 let guestSchema = new mongoose.Schema(
     {
-        firstName: {
-            type: String,
-            required: true,
-        },
-        lastName: {
+        name: {
             type: String,
             required: true,
         },
@@ -27,13 +23,10 @@ let guestSchema = new mongoose.Schema(
         },
         plus_ones: [
             {
-              firstName: {
+              name: {
                 type: String,
                 required: true,
-              },
-              lastName: {
-                type: String,
-              },
+              }
             },
           ],
     },
