@@ -90,7 +90,13 @@ export const eventGuests = catchAsync(async (req, res) => {
 
   const guests = await GuestModel.find({'event': event})
 
-  return AppResponse(res, 200, "", guests);
+  const attending = guests.filter(guest => guest.attending === true).length
+  const not_attending = guests.filter(guest => guest.attending === false).length
+  const no_response = guests.filter(guest => guest.attending == null).length
+  let plus_ones = 0
+  guests.forEach(guest => plus_ones += guest.plus_ones.length);
+
+  return AppResponse(res, 200, "", {attending: attending, not_attending: not_attending, no_response: no_response, plus_ones: plus_ones, guests: guests});
 })
 
 export const editEvent = catchAsync(async (req, res) => {
