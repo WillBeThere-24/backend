@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import AppError from './appError'
 const resendApiKey = 're_AYyrQZ6K_JPQsjc9FYpYcaXc7ZGkJ2hnK' // Replace with your Resend API key
 
 const client = new Resend(resendApiKey)
@@ -7,7 +8,7 @@ const client = new Resend(resendApiKey)
 export const sendEmail = async (to, subject, template) => {
     try {
         const email = await client.emails.send({
-            from: 'onboarding@resend.dev', // Replace with your sender email
+            from: 'ejioforcelestine77@gmail.com', // Replace with your sender email
             to: to,
             subject: subject,
             html: template,
@@ -15,6 +16,6 @@ export const sendEmail = async (to, subject, template) => {
         console.log(`Email sent to ${to}`)
         console.log(email)
     } catch (error) {
-        console.error('Error sending email:', error)
+        throw new AppError('Error sending mail to invitee. Please try again later')
     }
 }
