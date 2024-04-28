@@ -35,8 +35,14 @@ export const createEvent = catchAsync(async (req, res) => {
     const imageUrl = await uploadFile('WillBeThere', image)
     const event = await EventModel.create({
         user: user,
+        name: body.name,
+        description: body.description,
+        location: body.location,
+        isPrivate: body.isPrivate,
+        start: body.start,
+        end: body.end,
+        timezone: body.timezone,
         image: imageUrl,
-        ...body,
     })
 
     return AppResponse(res, 201, 'Event Created Successfully', event)
