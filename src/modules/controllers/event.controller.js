@@ -11,6 +11,7 @@ export const createEvent = catchAsync(async (req, res) => {
         name: req.body.name,
         user: user,
     })
+    
 
     if (checkExisting) {
         throw new AppError('Event already exists', 409)
