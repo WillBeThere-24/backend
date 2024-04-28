@@ -13,7 +13,7 @@ import {
     toggleShowEventItem, 
     deleteEventItem
 } from '../controllers/event.controller.js'
-import guestRouter from './guest.route.js'
+// import guestRouter from './guest.route.js'
 import { protect } from '../../common/middlewares/protect.js'
 import upload from '../../common/utils/multer.js'
 
@@ -34,6 +34,6 @@ eventRouter.get('/:id/item', getEventItems)
 eventRouter.post('/:event/toggle/item/:id', toggleShowEventItem)
 eventRouter.delete('/:event/item/:id', deleteEventItem)
 
-eventRouter.use('/rsvp', guestRouter)
+// eventRouter.use('/rsvp', guestRouter)
 
 export default eventRouter

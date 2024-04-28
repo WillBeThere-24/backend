@@ -3,8 +3,6 @@ import AppError from '../../common/utils/appError.js'
 import { AppResponse } from '../../common/utils/appResponse.js'
 import { catchAsync } from '../../common/utils/errorHandler.js'
 import { UserModel } from '../schemas/user.schema.js'
-import { EventModel } from '../schemas/event.schema.js'
-import { GuestModel } from '../schemas/guest.schema.js'
 import { compareData, signData, setCookie } from '../../common/utils/helper.js'
 import { ENVIRONMENT } from '../../common/config/environment.js'
 
