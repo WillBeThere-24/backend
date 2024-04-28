@@ -49,11 +49,19 @@ export const myEvents = catchAsync(async (req, res) => {
 
     const events = await EventModel.find({ user: user })
 
+    const eventsWithCount = await Promise.all(
+      events.map(async event => {
+        const attendingGuestCount = await event.attendingGuestCount;
+        const notAttendingGuestCount = await event.notAttendingGuestCount;
+        return { ...event.toObject(), attendingGuestCount, notAttendingGuestCount };
+      })
+    );
+
     return AppResponse(
         res,
         200,
         'All events for user retrieved successfully',
-        events
+        eventsWithCount
     )
 })
 
@@ -101,12 +109,18 @@ export const inviteGuest = catchAsync(async (req, res) => {
     if (checkInvitee) {
         throw new AppError('Invite already sent to guest', 409)
     }
+
+    const guest = await GuestModel.create({
+        ...req.body,
+        event: event,
+    })
+
     const date = formatDate(event.start)
     const template = sendRSVPMailTemplate({
         name,
         organizerName: event.user.name,
         date: date,
-        url: `https://willbethere.netlify.app/rsvp/${event.id}`,
+        url: `https://willbethere.netlify.app/rsvp/${event.id}?guest=${guest._id}`,
     })
     await sendMail(email, `You are invited to ${event.name} Event`, template)
 

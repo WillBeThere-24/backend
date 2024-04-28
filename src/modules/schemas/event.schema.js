@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { GuestModel } from '../schemas/guest.schema.js'
 
 const eventSchema = new mongoose.Schema(
     {
@@ -40,8 +41,42 @@ const eventSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        attendingGuestCount: {
+            type: Number,
+            virtual: true,
+            get: function() {
+                return GuestModel.countDocuments({ event: this, attending: true })
+                .then(count => count);
+            }
+        },
+        notAttendingGuestCount: {
+            type: Number,
+            virtual: true,
+            get: function() {
+                return GuestModel.countDocuments({ event: this, attending: false })
+                .then(count => count);
+            }
+        },
+        noResponseGuestCount: {
+            type: Number,
+            virtual: true,
+            get: function() {
+                return GuestModel.countDocuments({ event: this, attending: null })
+                .then(count => count);
+            }
+        },
+        // plusOnesGuestCount: {
+        //     type: Number,
+        //     virtual: true,
+        //     get: function() {
+        //         let plusOnes = 0;
+        //         const guests = GuestModel.find({ event: this, attending: true })
+        //         guests.forEach(guest => plusOnes += guest.plus_ones.length)
+        //         return plusOnes
+        //     }
+        // }
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
 
 export const EventModel = mongoose.model('Event', eventSchema)
