@@ -1,5 +1,5 @@
 import { Resend } from 'resend'
-import AppError from './appError'
+import AppError from './appError.js'
 const resendApiKey = 're_AYyrQZ6K_JPQsjc9FYpYcaXc7ZGkJ2hnK' // Replace with your Resend API key
 
 const client = new Resend(resendApiKey)
