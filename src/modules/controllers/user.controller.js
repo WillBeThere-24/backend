@@ -7,8 +7,8 @@ import { EventModel } from '../schemas/event.schema.js';
 
 export const getUser = catchAsync(async (req, res) => {
     const { user } = req;
-    const events = EventModel.countDocuments({"user": user})
-    const rsvps = GuestModel.find({"email": user.email}).count
+    const events = (await EventModel.find({"user": user})).length
+    const rsvps = (await GuestModel.find({"email": user.email})).length
 
     return AppResponse(
       res,
