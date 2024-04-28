@@ -24,6 +24,6 @@ export const protect = catchAsync(async (req, res, next) => {
     }
     next();
   } catch {
-    throw new AppError('Login Error. Please log in again.', 409);
+    throw new AppError('Unauthorized Request', 409);
   }
 });
