@@ -3,6 +3,7 @@ import {
     createEvent,
     myEvents,
     getEvent,
+    myRSVPs,
     inviteGuest,
     eventGuests,
     editEvent,
@@ -22,6 +23,7 @@ eventRouter.use(protect)
 
 eventRouter.post('/', upload.single('image'), createEvent)
 eventRouter.get('/', myEvents)
+eventRouter.get('/myrsvps', myRSVPs)
 eventRouter.get('/:id', getEvent)
 eventRouter.post('/:id/invite', inviteGuest)
 eventRouter.get('/:id/guests', eventGuests)
