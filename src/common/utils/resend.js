@@ -1,6 +1,6 @@
 import { Resend } from 'resend'
 import readFileSync from 'fs'
-const resendApiKey = 'YOUR_RESEND_API_KEY' // Replace with your Resend API key
+const resendApiKey = 're_AYyrQZ6K_JPQsjc9FYpYcaXc7ZGkJ2hnK' // Replace with your Resend API key
 
 const client = new Resend(resendApiKey)
 
