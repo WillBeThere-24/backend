@@ -7,7 +7,7 @@ import { GuestModel } from '../schemas/guest.schema.js'
 import { ItemModel } from '../schemas/item.schema.js'
 
 export const createEvent = catchAsync(async (req, res) => {
-    const { user, file, ...body } = req
+    const { user, file } = req
     const checkExisting = await EventModel.findOne({
         name: req.body.name,
         user: user,
@@ -34,14 +34,8 @@ export const createEvent = catchAsync(async (req, res) => {
     const imageUrl = await uploadFile('WillBeThere', file)
     const event = await EventModel.create({
         user: user,
-        name: body.name,
-        description: body.description,
-        location: body.location,
-        isPrivate: body.isPrivate,
-        start: body.start,
-        end: body.end,
-        timezone: body.timezone,
-        image: imageUrl,
+        image: imageUrl.secure_url,
+        ...req.body
     })
 
     return AppResponse(res, 201, 'Event Created Successfully', event)
