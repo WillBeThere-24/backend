@@ -20,9 +20,14 @@ transporter.verify(function (error, success) {
     }
 })
 
-export async function sendMail(mailOptions) {
+export async function sendMail(to, subject, template) {
     try {
-        await transporter.sendMail(mailOptions)
+        await transporter.sendMail({
+            from: ENVIRONMENT.MAILER.EMAIL,
+            to,
+            subject,
+            html: template,
+        })
         console.log('Email sent successfully')
     } catch (error) {
         console.log(error)

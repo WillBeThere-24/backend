@@ -50,12 +50,16 @@ export const myEvents = catchAsync(async (req, res) => {
     const events = await EventModel.find({ user: user })
 
     const eventsWithCount = await Promise.all(
-      events.map(async event => {
-        const attendingGuestCount = await event.attendingGuestCount;
-        const notAttendingGuestCount = await event.notAttendingGuestCount;
-        return { ...event.toObject(), attendingGuestCount, notAttendingGuestCount };
-      })
-    );
+        events.map(async (event) => {
+            const attendingGuestCount = await event.attendingGuestCount
+            const notAttendingGuestCount = await event.notAttendingGuestCount
+            return {
+                ...event.toObject(),
+                attendingGuestCount,
+                notAttendingGuestCount,
+            }
+        })
+    )
 
     return AppResponse(
         res,
@@ -114,20 +118,22 @@ export const inviteGuest = catchAsync(async (req, res) => {
         ...req.body,
         event: event,
     })
+  if (guest) {
+      console.log(event.start)
+        const date = formatDate(event.start)
+        const template = sendRSVPMailTemplate({
+            name,
+            organizerName: event.user.name,
+            date: date,
+            url: `https://willbethere.netlify.app/rsvp/${event.id}?guest=${guest.id}`,
+        })
 
-    const date = formatDate(event.start)
-    const template = sendRSVPMailTemplate({
-        name,
-        organizerName: event.user.name,
-        date: date,
-        url: `https://willbethere.netlify.app/rsvp/${event.id}?guest=${guest._id}`,
-    })
-    await sendMail(email, `You are invited to ${event.name} Event`, template)
-
-    const guest = await GuestModel.create({
-        ...req.body,
-        event: event,
-    })
+        await sendMail(
+            email,
+            `You are invited to ${event.name} Event`,
+            template
+        )
+    }
 
     // Send mail to guest
 
