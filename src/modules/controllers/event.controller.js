@@ -1,7 +1,10 @@
+import { sendRSVPMailTemplate } from '../../common/templates/rsvp.js'
 import AppError from '../../common/utils/appError.js'
 import { AppResponse } from '../../common/utils/appResponse.js'
 import { uploadFile } from '../../common/utils/cloudinary.js'
 import { catchAsync } from '../../common/utils/errorHandler.js'
+import { formatDate } from '../../common/utils/helper.js'
+import { sendEmail } from '../../common/utils/resend.js'
 import { EventModel } from '../schemas/event.schema.js'
 import { GuestModel } from '../schemas/guest.schema.js'
 import { ItemModel } from '../schemas/item.schema.js'
@@ -35,7 +38,7 @@ export const createEvent = catchAsync(async (req, res) => {
     const event = await EventModel.create({
         user: user,
         image: imageUrl.secure_url,
-        ...req.body
+        ...req.body,
     })
 
     return AppResponse(res, 201, 'Event Created Successfully', event)
@@ -76,20 +79,21 @@ export const getEvent = catchAsync(async (req, res) => {
 })
 
 export const myRSVPs = catchAsync(async (req, res) => {
-  const { user } = req
+    const { user } = req
 
-  const rsvps = await GuestModel.find({ email: user.email }).populate('event'); 
+    const rsvps = await GuestModel.find({ email: user.email }).populate('event')
 
-  return AppResponse(
-      res,
-      200,
-      'All events for user retrieved successfully',
-      rsvps
-  )
+    return AppResponse(
+        res,
+        200,
+        'All events for user retrieved successfully',
+        rsvps
+    )
 })
 
 export const inviteGuest = catchAsync(async (req, res) => {
     const { user } = req
+    const { name, email } = req.body
     const eventID = req.params.id
     const event = await EventModel.findOne({ user: user, _id: eventID })
 
@@ -105,6 +109,14 @@ export const inviteGuest = catchAsync(async (req, res) => {
     if (checkInvitee) {
         throw new AppError('Invite already sent to guest', 409)
     }
+    const date = formatDate(event.start)
+    const template = sendRSVPMailTemplate({
+        name,
+        organizerName: event.user.name,
+        date: date,
+        url: `https://willbethere.netlify.app/rsvp/${event.id}`,
+    })
+    await sendEmail(email, `You are invited to ${event.name} Event`, template)
 
     const guest = await GuestModel.create({
         ...req.body,
@@ -116,7 +128,7 @@ export const inviteGuest = catchAsync(async (req, res) => {
     return AppResponse(
         res,
         201,
-        'Guest has been sent an invite to your event',
+        'Guest has been sent an invite mail to your event',
         guest
     )
 })
@@ -164,58 +176,66 @@ export const deleteEvent = catchAsync(async (req, res) => {
 })
 
 export const addEventItem = catchAsync(async (req, res) => {
-  const { user } = req
-  const event = await EventModel.findOne({'user': user, '_id': req.params.id})
+    const { user } = req
+    const event = await EventModel.findOne({ user: user, _id: req.params.id })
 
-  if (!event) {
-    throw new AppError('Event does not exists', 409);
-  }
+    if (!event) {
+        throw new AppError('Event does not exists', 409)
+    }
 
-  const item = await ItemModel.create({
-    event: event,
-    ...req.body
-  });
+    const item = await ItemModel.create({
+        event: event,
+        ...req.body,
+    })
 
-  return AppResponse(res, 201, "Item Created Successfully", item)
+    return AppResponse(res, 201, 'Item Created Successfully', item)
 })
 
 export const getEventItems = catchAsync(async (req, res) => {
-  const { user } = req
-  const event = await EventModel.findOne({'user': user, '_id': req.params.id})
+    const { user } = req
+    const event = await EventModel.findOne({ user: user, _id: req.params.id })
 
-  if (!event) {
-    throw new AppError('Event does not exists', 409);
-  }
+    if (!event) {
+        throw new AppError('Event does not exists', 409)
+    }
 
-  const items = await ItemModel.find({event: event})
+    const items = await ItemModel.find({ event: event })
 
-  return AppResponse(res, 200, "Items Fetched Successfully", items)
+    return AppResponse(res, 200, 'Items Fetched Successfully', items)
 })
 
 export const toggleShowEventItem = catchAsync(async (req, res) => {
-  const { user } = req
-  let item = await ItemModel.findOne({'user': user, 'event': req.params.event, '_id': req.params.id})
-  console.log
+    const { user } = req
+    let item = await ItemModel.findOne({
+        user: user,
+        event: req.params.event,
+        _id: req.params.id,
+    })
+    console.log
 
-  if (!item) {
-    throw new AppError('Item does not exists', 409);
-  }
+    if (!item) {
+        throw new AppError('Item does not exists', 409)
+    }
 
-  item.show = !item.show
-  item.save()
+    item.show = !item.show
+    item.save()
 
-  return AppResponse(res, 200, "Item toggled successfully", item);
+    return AppResponse(res, 200, 'Item toggled successfully', item)
 })
 
 export const deleteEventItem = catchAsync(async (req, res) => {
-  const { user } = req
-  let item = await ItemModel.findOne({'user': user, 'event': req.params.event, '_id': req.params.id})
+    const { user } = req
+    let item = await ItemModel.findOne({
+        user: user,
+        event: req.params.event,
+        _id: req.params.id,
+    })
 
-  if (!item) {
-    throw new AppError('Item does not exists', 409);
-  }
+    if (!item) {
+        throw new AppError('Item does not exists', 409)
+    }
 
-  await ItemModel.findByIdAndDelete(item);
+    await ItemModel.findByIdAndDelete(item)
 
-  return AppResponse(res, 204, "Item Deleted", null);
+    return AppResponse(res, 204, 'Item Deleted', null)
 })

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { randomBytes } from 'crypto';
 import { compare, hash } from "bcrypt";
 import { ENVIRONMENT } from "../config/environment.js";
@@ -41,4 +42,10 @@ export const setCookie = (res, name, value, options = {}) => {
       sameSite: "none",
       ...options,
     });
-  };
+};
+  
+
+export function formatDate(dateTime) {
+    const dt = DateTime.fromISO(dateTime)
+    return dt.toLocaleString(DateTime.DATE_FULL)
+}
