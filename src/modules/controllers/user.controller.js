@@ -2,23 +2,18 @@ import { catchAsync } from '../../common/utils/errorHandler.js'
 import { UserModel } from '../schemas/user.schema.js'
 import { AppResponse } from '../../common/utils/appResponse.js'
 import { UserEntityTransformer } from '../../common/transformers/entityTransformer.js';
-import { GuestModel } from '../schemas/guest.schema.js';
-import { EventModel } from '../schemas/event.schema.js';
 
 export const getUser = catchAsync(async (req, res) => {
     const { user } = req;
-    const events = (await EventModel.find({"user": user})).length
-    const rsvps = (await GuestModel.find({"email": user.email})).length
+
+    const eventCount = await user.eventCount
+    const rsvpCount = await user.rsvpCount
 
     return AppResponse(
       res,
       200,
       "Current user fetched successfully",
-      {
-        "user": UserEntityTransformer(user),
-        "events": events,
-        "rsvps": rsvps
-      },
+      { ...UserEntityTransformer(user), eventCount, rsvpCount }
     );
 });
 
