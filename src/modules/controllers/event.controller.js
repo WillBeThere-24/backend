@@ -46,11 +46,19 @@ export const myEvents = catchAsync(async (req, res) => {
 
     const events = await EventModel.find({ user: user })
 
+    const eventsWithCount = await Promise.all(
+      events.map(async event => {
+        const attendingGuestCount = await event.attendingGuestCount;
+        const notAttendingGuestCount = await event.notAttendingGuestCount;
+        return { ...event.toObject(), attendingGuestCount, notAttendingGuestCount };
+      })
+    );
+
     return AppResponse(
         res,
         200,
         'All events for user retrieved successfully',
-        events
+        eventsWithCount
     )
 })
 
