@@ -80,7 +80,12 @@ export const getEvent = catchAsync(async (req, res) => {
         throw new AppError('Event does not exists', 409)
     }
 
-    return AppResponse(res, 200, '', event)
+    const attendingCount = await event.attendingGuestCount
+    const notAttendingCount = await event.notAttendingGuestCount
+    const noResponseCount = await event.noResponseGuestCount
+
+
+    return AppResponse(res, 200, '', { ...event._doc, attendingCount, notAttendingCount, noResponseCount })
 })
 
 export const myRSVPs = catchAsync(async (req, res) => {
