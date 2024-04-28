@@ -44,8 +44,14 @@ export const setCookie = (res, name, value, options = {}) => {
     })
 }
 
-export function formatDate(dateTime) {
-  const dt = DateTime.fromISO(new Date(dateTime))
-  console.log(dt)
-    return dt.toLocaleString(DateTime.DATE_FULL)
+export function formatDate(dateTime, zone) {
+    console.log(dateTime.toString())
+    const date = `${dateTime}`.slice(0, -1)
+    console.log(date)
+
+    const utcDt = DateTime.fromISO(2024, 5, 20, 10, 0) // Example UTC datetime
+    const userLocalDate = utcDt.setZone(zone)
+    const dt = DateTime.fromISO(dateTime)
+    console.log(dt, 'dt')
+  return dt.toLocaleString(DateTime.DATE_FULL)
 }
