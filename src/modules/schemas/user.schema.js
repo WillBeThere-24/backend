@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import { hashData } from '../../common/utils/helper.js';
+import { EventModel } from './event.schema.js';
+import { GuestModel } from './guest.schema.js';
 
 const userSchema = new mongoose.Schema(
     {
@@ -21,9 +23,31 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: false
         },
+        eventCount: {
+            type: Number,
+            virtual: true,
+            get: function() {
+                return EventModel.countDocuments({ user: this })
+                .then(count => count);
+            }
+        },
+        rsvpCount: {
+            type: Number,
+            virtual: true,
+            get: function() {
+                return GuestModel.countDocuments({ email: this.email })
+                .then(count => count);
+            }
+        }
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
+
+userSchema.methods.toJSON = function toJSON() {
+  const obj = this.toObject();
+  obj.eventCount = this.eventCount;
+  return obj;
+};
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {

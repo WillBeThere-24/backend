@@ -77,13 +77,13 @@ export const login = catchAsync(async (req, res) => {
         refreshToken,
     })
 
-    const events = (await EventModel.find({ user: user })).length
-    const rsvps = (await GuestModel.find({ email: user.email })).length
+    const eventCount = await user.eventCount
+    const rsvpCount = await user.rsvpCount
 
-    // Return success response
-    return AppResponse(res, 200, 'Login successful', {
-        user: UserEntityTransformer(updatedUser),
-        events: events,
-        rsvps: rsvps,
-    })
+    return AppResponse(
+      res,
+      200,
+      "Login successful",
+      { ...UserEntityTransformer(updatedUser), eventCount, rsvpCount }
+    );
 })
