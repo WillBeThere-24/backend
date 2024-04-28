@@ -38,11 +38,12 @@ export const register = catchAsync(async (req, res) => {
 
 export const login = catchAsync(async (req, res) => {
     // Extract user data from request body
-    const { email, password } = req.body
+    const { email, auth = 'local' } = req.body
+    const password = auth !== 'local' ? 'none' : req.body.password
 
     // Validate user data
-    if (!email || !password) {
-        return res.status(400).json({ message: 'All fields are required' })
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' })
     }
 
     const user = await UserModel.findOne({ email: email })
