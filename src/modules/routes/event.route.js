@@ -1,14 +1,23 @@
 import { Router } from 'express'
-import { createEvent, myEvents, getEvent, inviteGuest, eventGuests, editEvent, deleteEvent } from '../controllers/event.controller.js'
+import {
+    createEvent,
+    myEvents,
+    getEvent,
+    inviteGuest,
+    eventGuests,
+    editEvent,
+    deleteEvent,
+} from '../controllers/event.controller.js'
 // import { createEvent, myEvents, getEvent, inviteGuest, eventGuests, editEvent, deleteEvent, addEventItem, getEventItems, toggleShowEventItem, deleteEventItem } from '../controllers/event.controller.js'
 import guestRouter from './guest.route.js'
-import { protect } from "../../common/middlewares/protect.js";
+import { protect } from '../../common/middlewares/protect.js'
+import upload from '../../common/utils/multer.js'
 
 const eventRouter = Router()
 
-eventRouter.use(protect);
+eventRouter.use(protect)
 
-eventRouter.post('/', createEvent)
+eventRouter.post('/', upload.single('image'), createEvent)
 eventRouter.get('/', myEvents)
 eventRouter.get('/:id', getEvent)
 eventRouter.post('/:id/invite', inviteGuest)
