@@ -48,7 +48,7 @@ export const createEvent = catchAsync(async (req, res) => {
 export const myEvents = catchAsync(async (req, res) => {
     const { user } = req
 
-    const events = await EventModel.find({ user: user })
+    const events = await EventModel.find({ user: user }).sort({ createdAt: -1 })
 
     const eventsWithCount = await Promise.all(
         events.map(async (event) => {
