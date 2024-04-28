@@ -120,7 +120,7 @@ export const inviteGuest = catchAsync(async (req, res) => {
         event: event,
     })
     if (guest) {
-        const date = new Date(event.start).toString()
+        const date = new Date(event.start)
         const user = await UserModel.findById(event.user._id)
         const template = sendRSVPMailTemplate({
             name: guest.name,

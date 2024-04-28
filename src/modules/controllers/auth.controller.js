@@ -3,16 +3,14 @@ import AppError from '../../common/utils/appError.js'
 import { AppResponse } from '../../common/utils/appResponse.js'
 import { catchAsync } from '../../common/utils/errorHandler.js'
 import { UserModel } from '../schemas/user.schema.js'
-import { EventModel } from '../schemas/event.schema.js'
-import { GuestModel } from '../schemas/guest.schema.js'
 import { compareData, signData, setCookie } from '../../common/utils/helper.js'
 import { ENVIRONMENT } from '../../common/config/environment.js'
 
 export const register = catchAsync(async (req, res) => {
-    const { name, email, password } = req.body
+    const { name, email, password, auth = 'local' } = req.body
 
     // Validate user data
-    if (!name || !email || !password) {
+    if (!name || !email) {
         throw new AppError('All fields are required', 400)
     }
 
@@ -24,7 +22,10 @@ export const register = catchAsync(async (req, res) => {
     }
 
     // Create a new user object
-    const newUser = await UserModel.create(req.body)
+    const newUser = await UserModel.create({
+        ...req.body,
+        password: auth !== 'local' ? 'none' : password,
+    })
 
     // Return success response
     return AppResponse(
@@ -80,10 +81,9 @@ export const login = catchAsync(async (req, res) => {
     const eventCount = await user.eventCount
     const rsvpCount = await user.rsvpCount
 
-    return AppResponse(
-      res,
-      200,
-      "Login successful",
-      { ...UserEntityTransformer(updatedUser), eventCount, rsvpCount }
-    );
+    return AppResponse(res, 200, 'Login successful', {
+        ...UserEntityTransformer(updatedUser),
+        eventCount,
+        rsvpCount,
+    })
 })
