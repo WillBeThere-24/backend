@@ -4,9 +4,10 @@ import { uploadFile } from '../../common/utils/cloudinary.js'
 import { catchAsync } from '../../common/utils/errorHandler.js'
 import { EventModel } from '../schemas/event.schema.js'
 import { GuestModel } from '../schemas/guest.schema.js'
+import { ItemModel } from '../schemas/item.schema.js'
 
 export const createEvent = catchAsync(async (req, res) => {
-    const { user, file, ...body } = req
+    const { user, file } = req
     const checkExisting = await EventModel.findOne({
         name: req.body.name,
         user: user,
@@ -33,14 +34,8 @@ export const createEvent = catchAsync(async (req, res) => {
     const imageUrl = await uploadFile('WillBeThere', file)
     const event = await EventModel.create({
         user: user,
-        name: body.name,
-        description: body.description,
-        location: body.location,
-        isPrivate: body.isPrivate,
-        start: body.start,
-        end: body.end,
-        timezone: body.timezone,
-        image: imageUrl,
+        image: imageUrl.secure_url,
+        ...req.body
     })
 
     return AppResponse(res, 201, 'Event Created Successfully', event)
@@ -145,4 +140,61 @@ export const deleteEvent = catchAsync(async (req, res) => {
     await EventModel.findByIdAndDelete(event)
 
     return AppResponse(res, 204, 'Event Deleted', null)
+})
+
+export const addEventItem = catchAsync(async (req, res) => {
+  const { user } = req
+  const event = await EventModel.findOne({'user': user, '_id': req.params.id})
+
+  if (!event) {
+    throw new AppError('Event does not exists', 409);
+  }
+
+  const item = await ItemModel.create({
+    event: event,
+    ...req.body
+  });
+
+  return AppResponse(res, 201, "Item Created Successfully", item)
+})
+
+export const getEventItems = catchAsync(async (req, res) => {
+  const { user } = req
+  const event = await EventModel.findOne({'user': user, '_id': req.params.id})
+
+  if (!event) {
+    throw new AppError('Event does not exists', 409);
+  }
+
+  const items = await ItemModel.find({event: event})
+
+  return AppResponse(res, 200, "Items Fetched Successfully", items)
+})
+
+export const toggleShowEventItem = catchAsync(async (req, res) => {
+  const { user } = req
+  let item = await ItemModel.findOne({'user': user, 'event': req.params.event, '_id': req.params.id})
+  console.log
+
+  if (!item) {
+    throw new AppError('Item does not exists', 409);
+  }
+
+  item.show = !item.show
+  item.save()
+
+  return AppResponse(res, 200, "Item toggled successfully", item);
+})
+
+export const deleteEventItem = catchAsync(async (req, res) => {
+  const { user } = req
+  let item = await ItemModel.findOne({'user': user, 'event': req.params.event, '_id': req.params.id})
+
+  if (!item) {
+    throw new AppError('Item does not exists', 409);
+  }
+
+  await ItemModel.findByIdAndDelete(item);
+
+  return AppResponse(res, 204, "Item Deleted", null);
 })
