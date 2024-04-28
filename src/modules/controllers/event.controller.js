@@ -1,3 +1,4 @@
+import { sendRSVPMailTemplate } from '../../common/templates/rsvp.js'
 import AppError from '../../common/utils/appError.js'
 import { AppResponse } from '../../common/utils/appResponse.js'
 import { uploadFile } from '../../common/utils/cloudinary.js'
@@ -68,7 +69,8 @@ export const getEvent = catchAsync(async (req, res) => {
 })
 
 export const inviteGuest = catchAsync(async (req, res) => {
-    const { user } = req
+  const { user } = req
+  const {name, email}
     const eventID = req.params.id
     const event = await EventModel.findOne({ user: user, _id: eventID })
 
@@ -84,7 +86,13 @@ export const inviteGuest = catchAsync(async (req, res) => {
     if (checkInvitee) {
         throw new AppError('Invite already sent to guest', 409)
     }
+    const 
+  const template = sendRSVPMailTemplate({
+    name,
+    date: event.start,
+    
 
+  })
     const guest = await GuestModel.create({
         ...req.body,
         event: event,
