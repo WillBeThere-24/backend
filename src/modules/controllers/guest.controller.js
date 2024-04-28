@@ -8,7 +8,7 @@ export const rsvpEvent = catchAsync(async (req, res) => {
   const event = await EventModel.findById(req.params.id)
 
   if (!event) {
-    throw new AppError("req.params.id", 400);
+    throw new AppError("Event does not exist", 400);
   }
 
   const guest = await GuestModel.findOne({'event': event, '_id': req.query.guest})
