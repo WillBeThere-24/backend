@@ -7,18 +7,17 @@ import { GuestModel } from '../schemas/guest.schema.js'
 import { ItemModel } from '../schemas/item.schema.js'
 
 export const createEvent = catchAsync(async (req, res) => {
-    const { user, image, ...body } = req
+    const { user, file, ...body } = req
     const checkExisting = await EventModel.findOne({
         name: req.body.name,
         user: user,
     })
-    
 
     if (checkExisting) {
         throw new AppError('Event already exists', 409)
     }
 
-    if (!image) {
+    if (!file) {
         throw new AppError('Please provide an image for the event.')
     }
 
@@ -32,7 +31,7 @@ export const createEvent = catchAsync(async (req, res) => {
     //   throw new AppError('End date should be after start date', 409);
     // }
     // Validation End
-    const imageUrl = await uploadFile('WillBeThere', image)
+    const imageUrl = await uploadFile('WillBeThere', file)
     const event = await EventModel.create({
         user: user,
         name: body.name,
