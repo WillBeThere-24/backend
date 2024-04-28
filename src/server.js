@@ -25,7 +25,16 @@ const appName = ENVIRONMENT.APP.NAME
  * App Security
  */
 app.use(helmet())
-app.use(cors(['http://localhost:3000', 'https://localhost:5173', 'https://willbethere.netlify.app']))
+app.use(
+    cors({
+        origin: [
+            'http://localhost:3000',
+            'https://localhost:5173',
+            'https://willbethere.netlify.app',
+        ],
+        credentials: true,
+    })
+)
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.disable('x-powered-by')
