@@ -3,6 +3,8 @@ import AppError from '../../common/utils/appError.js';
 import { AppResponse } from '../../common/utils/appResponse.js';
 import { catchAsync } from '../../common/utils/errorHandler.js';
 import { UserModel } from '../schemas/user.schema.js';
+import { EventModel } from '../schemas/event.schema.js';
+import { GuestModel } from '../schemas/guest.schema.js';
 import { compareData, signData, setCookie } from "../../common/utils/helper.js";
 import { ENVIRONMENT } from '../../common/config/environment.js';
 
@@ -67,6 +69,13 @@ export const login = catchAsync(async (req, res) => {
     setCookie(res, 'refreshToken', refreshToken, { maxAge: 24 * 60 * 60 * 1000 });
     const updatedUser = await UserModel.findByIdAndUpdate(user.id, {refreshToken});
   
+    const events = (await EventModel.find({"user": user})).length
+    const rsvps = (await GuestModel.find({"email": user.email})).length
+
     // Return success response
-    return AppResponse(res, 200, 'Login successful', UserEntityTransformer(updatedUser));
+    return AppResponse(res, 200, 'Login successful', {
+      "user": UserEntityTransformer(updatedUser),
+      "events": events,
+      "rsvps": rsvps
+    },);
 });  
