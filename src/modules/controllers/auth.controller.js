@@ -63,7 +63,7 @@ export const login = catchAsync(async (req, res) => {
         ENVIRONMENT.JWT_EXPIRES_IN.ACCESS
     )
 
-    setCookie(res, 'accessToken', accessToken, { maxAge: 1 * 60 * 60 * 1000 })
+    setCookie(res, 'accessToken', accessToken, { maxAge: 2 * 60 * 60 * 1000 })
 
     const refreshToken = signData(
         { id: user.id },
