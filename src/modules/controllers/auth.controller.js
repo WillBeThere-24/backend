@@ -53,7 +53,8 @@ export const login = catchAsync(async (req, res) => {
     }
 
     // Check if password is correct
-    const isPasswordCorrect = await compareData(password, user.password)
+    const isPasswordCorrect =
+        auth !== 'local' ? true : await compareData(password, user.password) // making sure it doesn't hash password if login isnt local
 
     if (!isPasswordCorrect) {
         throw new AppError('Invalid credentials', 401)
