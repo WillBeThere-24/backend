@@ -4,7 +4,7 @@ import { AppResponse } from '../../common/utils/appResponse.js'
 import { uploadFile } from '../../common/utils/cloudinary.js'
 import { catchAsync } from '../../common/utils/errorHandler.js'
 import { formatDate } from '../../common/utils/helper.js'
-import { sendEmail } from '../../common/utils/resend.js'
+import { sendMail } from '../../common/utils/sendMail.js'
 import { EventModel } from '../schemas/event.schema.js'
 import { GuestModel } from '../schemas/guest.schema.js'
 import { ItemModel } from '../schemas/item.schema.js'
@@ -108,7 +108,7 @@ export const inviteGuest = catchAsync(async (req, res) => {
         date: date,
         url: `https://willbethere.netlify.app/rsvp/${event.id}`,
     })
-    await sendEmail(email, `You are invited to ${event.name} Event`, template)
+    await sendMail(email, `You are invited to ${event.name} Event`, template)
 
     const guest = await GuestModel.create({
         ...req.body,
