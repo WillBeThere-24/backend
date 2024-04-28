@@ -8,6 +8,7 @@ import { sendMail } from '../../common/utils/sendMail.js'
 import { EventModel } from '../schemas/event.schema.js'
 import { GuestModel } from '../schemas/guest.schema.js'
 import { ItemModel } from '../schemas/item.schema.js'
+import { UserModel } from '../schemas/user.schema.js'
 
 export const createEvent = catchAsync(async (req, res) => {
     const { user, file } = req
@@ -118,21 +119,17 @@ export const inviteGuest = catchAsync(async (req, res) => {
         ...req.body,
         event: event,
     })
-  if (guest) {
-      console.log(event.start)
-        const date = formatDate(event.start)
+    if (guest) {
+        const date = new Date(event.start).toString()
+        const user = await UserModel.findById(event.user._id)
         const template = sendRSVPMailTemplate({
-            name,
-            organizerName: event.user.name,
+            name: guest.name,
+            organizerName: user.name,
             date: date,
             url: `https://willbethere.netlify.app/rsvp/${event.id}?guest=${guest.id}`,
         })
 
-        await sendMail(
-            email,
-            `You are invited to ${event.name} Event`,
-            template
-        )
+        await sendMail(email, `You are invited to ${event.name}`, template)
     }
 
     // Send mail to guest
