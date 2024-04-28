@@ -109,21 +109,20 @@ export const inviteGuest = catchAsync(async (req, res) => {
     if (checkInvitee) {
         throw new AppError('Invite already sent to guest', 409)
     }
-    const date = formatDate(event.start)
-    const template = sendRSVPMailTemplate({
-        name,
-        organizerName: event.user.name,
-        date: date,
-        url: `https://willbethere.netlify.app/rsvp/${event.id}`,
-    })
-    await sendEmail(email, `You are invited to ${event.name} Event`, template)
 
     const guest = await GuestModel.create({
         ...req.body,
         event: event,
     })
 
-    // Send mail to guest
+    const date = formatDate(event.start)
+    const template = sendRSVPMailTemplate({
+        name,
+        organizerName: event.user.name,
+        date: date,
+        url: `https://willbethere.netlify.app/rsvp/${event.id}?guest=${guest._id}`,
+    })
+    await sendEmail(email, `You are invited to ${event.name} Event`, template)
 
     return AppResponse(
         res,
