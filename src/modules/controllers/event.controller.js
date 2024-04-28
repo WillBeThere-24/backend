@@ -67,6 +67,19 @@ export const getEvent = catchAsync(async (req, res) => {
     return AppResponse(res, 200, '', event)
 })
 
+export const myRSVPs = catchAsync(async (req, res) => {
+  const { user } = req
+
+  const rsvps = await GuestModel.find({ email: user.email }).populate('event'); 
+
+  return AppResponse(
+      res,
+      200,
+      'All events for user retrieved successfully',
+      rsvps
+  )
+})
+
 export const inviteGuest = catchAsync(async (req, res) => {
     const { user } = req
     const eventID = req.params.id
