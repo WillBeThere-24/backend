@@ -6,7 +6,7 @@ import { EventModel } from '../schemas/event.schema.js'
 import { GuestModel } from '../schemas/guest.schema.js'
 
 export const createEvent = catchAsync(async (req, res) => {
-    const { user, image, ...body } = req
+    const { user, file, ...body } = req
     const checkExisting = await EventModel.findOne({
         name: req.body.name,
         user: user,
@@ -17,7 +17,7 @@ export const createEvent = catchAsync(async (req, res) => {
         throw new AppError('Event already exists', 409)
     }
 
-    if (!image) {
+    if (!file) {
         throw new AppError('Please provide an image for the event.')
     }
 
