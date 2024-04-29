@@ -37,10 +37,13 @@ export const createEvent = catchAsync(async (req, res) => {
     // Validation End
 
     const imageUrl = await uploadFile('WillBeThere', file)
+    const itemsSplit = req.body.items.split(',')
+
     let event = await EventModel.create({
+        ...req.body,
         user: user,
         image: imageUrl.secure_url,
-        ...req.body,
+        items: itemsSplit,
     })
 
     const eventData = event._doc;
