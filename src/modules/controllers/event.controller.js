@@ -136,11 +136,13 @@ export const inviteGuest = catchAsync(async (req, res) => {
     })
     if (guest) {
         const date = new Date(event.start)
+        const endDate = new Date(event.end)
         const user = await UserModel.findById(event.user._id)
         const template = sendRSVPMailTemplate({
             name: guest.name,
             organizerName: user.name,
             date: date,
+            endDate: endDate,
             url: `https://willbethere.netlify.app/rsvp/${event.id}?guest=${guest.id}`,
         })
 

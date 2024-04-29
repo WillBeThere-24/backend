@@ -45,11 +45,14 @@ export const sendRSVPMailTemplate = (data) => {
 
             #click {
                 color: white;
-                width:30px;
-                height:50px;
                 background-color: #45062E;
-                border-radius: 10px;
-                padding: 2px;
+                border-radius: 5px;
+                display: inline-block;
+                text-align: center;
+                padding: 10px 24px;
+                margin-bottom: 20px;
+                text-decoration: none;
+                font-weight: bold;
             }
 
             ul {
@@ -66,7 +69,8 @@ export const sendRSVPMailTemplate = (data) => {
 
         <p>🎉 Event Details 🎉</p>
         <ul>
-            <li>Date: ${data.date.toString()}</li>
+            <li>Start Date: ${data.date.toString()}</li>
+            <li>End Date: ${data.endDate.toString()}</li>
         </ul>
 
         <p>RSVP to secure your spot at this exclusive event. Simply click below to confirm your attendance and let us know the number of guests accompanying you.</p>

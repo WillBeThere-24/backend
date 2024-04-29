@@ -26,10 +26,12 @@ let guestSchema = new mongoose.Schema(
         plus_ones: {
             type: [{
               name: {
-                type: String
+                type: String,
+                default: ""
               },
               email: {
-                type: String
+                type: String,
+                default: ""
               }
             }],
             default: []
