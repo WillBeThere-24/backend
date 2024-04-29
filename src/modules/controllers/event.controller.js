@@ -48,11 +48,11 @@ export const createEvent = catchAsync(async (req, res) => {
 
     const eventData = event._doc;
     eventData["user"] = user._id;
-    const attendingCount = await event.attendingGuestCount
-    const notAttendingCount = await event.notAttendingGuestCount
+    const attendingGuestCount = await event.attendingGuestCount
+    const notAttendingGuestCount = await event.notAttendingGuestCount
     const noResponseCount = await event.noResponseGuestCount
 
-    return AppResponse(res, 201, 'Event Created Successfully', { ...eventData, attendingCount, notAttendingCount, noResponseCount })
+    return AppResponse(res, 201, 'Event Created Successfully', { ...eventData, attendingGuestCount, notAttendingGuestCount, noResponseCount })
 })
 
 export const myEvents = catchAsync(async (req, res) => {
@@ -91,11 +91,11 @@ export const getEvent = catchAsync(async (req, res) => {
         throw new AppError('Event does not exists', 409)
     }
 
-    const attendingCount = await event.attendingGuestCount
-    const notAttendingCount = await event.notAttendingGuestCount
+    const attendingGuestCount = await event.attendingGuestCount
+    const notAttendingGuestCount = await event.notAttendingGuestCount
     const noResponseCount = await event.noResponseGuestCount
 
-    return AppResponse(res, 200, '', { ...event._doc, attendingCount, notAttendingCount, noResponseCount })
+    return AppResponse(res, 200, '', { ...event._doc, attendingGuestCount, notAttendingGuestCount, noResponseCount })
 })
 
 export const myRSVPs = catchAsync(async (req, res) => {
