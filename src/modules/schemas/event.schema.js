@@ -41,6 +41,10 @@ const eventSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        items: {
+            type: Array,
+            default: []
+        },
         attendingGuestCount: {
             type: Number,
             virtual: true,

@@ -35,14 +35,21 @@ export const createEvent = catchAsync(async (req, res) => {
     //   throw new AppError('End date should be after start date', 409);
     // }
     // Validation End
+
     const imageUrl = await uploadFile('WillBeThere', file)
-    const event = await EventModel.create({
+    let event = await EventModel.create({
         user: user,
         image: imageUrl.secure_url,
         ...req.body,
     })
 
-    return AppResponse(res, 201, 'Event Created Successfully', event)
+    const eventData = event._doc;
+    eventData["user"] = user._id;
+    const attendingCount = await event.attendingGuestCount
+    const notAttendingCount = await event.notAttendingGuestCount
+    const noResponseCount = await event.noResponseGuestCount
+
+    return AppResponse(res, 201, 'Event Created Successfully', { ...eventData, attendingCount, notAttendingCount, noResponseCount })
 })
 
 export const myEvents = catchAsync(async (req, res) => {
@@ -84,7 +91,6 @@ export const getEvent = catchAsync(async (req, res) => {
     const attendingCount = await event.attendingGuestCount
     const notAttendingCount = await event.notAttendingGuestCount
     const noResponseCount = await event.noResponseGuestCount
-
 
     return AppResponse(res, 200, '', { ...event._doc, attendingCount, notAttendingCount, noResponseCount })
 })

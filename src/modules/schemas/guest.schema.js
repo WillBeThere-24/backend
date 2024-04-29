@@ -31,7 +31,11 @@ let guestSchema = new mongoose.Schema(
               }
             }],
             default: []
-        }
+        },
+        items: {
+            type: Array,
+            default: []
+        },
     },
     { timestamps: true }
 )
