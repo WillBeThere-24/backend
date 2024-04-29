@@ -48,9 +48,9 @@ export const createEvent = catchAsync(async (req, res) => {
 
     const eventData = event._doc;
     eventData["user"] = user._id;
-    const attendingCount = event.attendingGuestCount
-    const notAttendingCount = event.notAttendingGuestCount
-    const noResponseCount = event.noResponseGuestCount
+    const attendingCount = await event.attendingGuestCount
+    const notAttendingCount = await event.notAttendingGuestCount
+    const noResponseCount = await event.noResponseGuestCount
 
     return AppResponse(res, 201, 'Event Created Successfully', { ...eventData, attendingCount, notAttendingCount, noResponseCount })
 })
@@ -61,9 +61,9 @@ export const myEvents = catchAsync(async (req, res) => {
 
     const eventsWithCount = await Promise.all(
         events.map(async (event) => {
-            const attendingGuestCount = event.attendingGuestCount
-            const notAttendingGuestCount = event.notAttendingGuestCount
-            const noResponseCount = event.noResponseGuestCount
+            const attendingGuestCount = await event.attendingGuestCount
+            const notAttendingGuestCount = await event.notAttendingGuestCount
+            const noResponseCount = await event.noResponseGuestCount
             return {
                 ...event.toObject(),
                 attendingGuestCount,
@@ -91,9 +91,9 @@ export const getEvent = catchAsync(async (req, res) => {
         throw new AppError('Event does not exists', 409)
     }
 
-    const attendingCount = event.attendingGuestCount
-    const notAttendingCount = event.notAttendingGuestCount
-    const noResponseCount = event.noResponseGuestCount
+    const attendingCount = await event.attendingGuestCount
+    const notAttendingCount = await event.notAttendingGuestCount
+    const noResponseCount = await event.noResponseGuestCount
 
     return AppResponse(res, 200, '', { ...event._doc, attendingCount, notAttendingCount, noResponseCount })
 })
