@@ -12,6 +12,7 @@ let guestSchema = new mongoose.Schema(
         },
         attending: {
             type: Boolean,
+            default: null,
         },
         event: {
             type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +21,7 @@ let guestSchema = new mongoose.Schema(
         },
         message: {
             type: String,
+            default: null,
         },
         plus_ones: {
             type: [{
