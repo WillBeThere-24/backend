@@ -21,14 +21,17 @@ let guestSchema = new mongoose.Schema(
         message: {
             type: String,
         },
-        plus_ones: [
-            {
+        plus_ones: {
+            type: [{
               name: {
-                type: String,
-                required: true,
+                type: String
+              },
+              email: {
+                type: String
               }
-            },
-          ],
+            }],
+            default: []
+        }
     },
     { timestamps: true }
 )
