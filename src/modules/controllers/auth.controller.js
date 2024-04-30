@@ -64,7 +64,7 @@ export const login = catchAsync(async (req, res) => {
     const accessToken = signData(
         { id: user.id },
         ENVIRONMENT.JWT.ACCESS_KEY,
-        ENVIRONMENT.JWT_EXPIRES_IN.ACCESS
+        Number(ENVIRONMENT.JWT_EXPIRES_IN.ACCESS)
     )
 
     setCookie(res, 'accessToken', accessToken, { maxAge: 2 * 60 * 60 * 1000 })
@@ -75,7 +75,7 @@ export const login = catchAsync(async (req, res) => {
         ENVIRONMENT.JWT_EXPIRES_IN.REFRESH
     )
     setCookie(res, 'refreshToken', refreshToken, {
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
     })
     const updatedUser = await UserModel.findByIdAndUpdate(user.id, {
         refreshToken,
@@ -83,7 +83,9 @@ export const login = catchAsync(async (req, res) => {
 
     const eventCount = await user.eventCount
     const rsvpCount = await user.rsvpCount
-    const latestThree = await EventModel.find({ user: user }).sort({ createdAt: -1 }).limit(3)
+    const latestThree = await EventModel.find({ user: user })
+        .sort({ createdAt: -1 })
+        .limit(3)
 
     return AppResponse(res, 200, 'Login successful', {
         ...UserEntityTransformer(updatedUser),
