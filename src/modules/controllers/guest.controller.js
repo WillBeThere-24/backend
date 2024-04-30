@@ -20,7 +20,7 @@ export const rsvpEvent = catchAsync(async (req, res) => {
         throw new AppError('This event is private.', 400)
     }
 
-    if (guest.attending !== null) {
+    if (guest && guest.attending !== null) {
         return AppResponse(res, 200, 'You have already responded to this event.', null)
     }
 
