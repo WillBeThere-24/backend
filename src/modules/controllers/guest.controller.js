@@ -21,7 +21,7 @@ export const rsvpEvent = catchAsync(async (req, res) => {
     }
 
     if (guest && guest.attending !== null) {
-        return AppResponse(res, 200, 'You have already responded to this event.', null)
+        throw new AppError('You have already responded to this event. To modify your RSVP response, please register to the application.', 401)
     }
 
     return AppResponse(res, 200, '', { event: event, guest: guest })
