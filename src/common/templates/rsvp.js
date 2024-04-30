@@ -109,7 +109,7 @@ export const sendRSVPMailTemplate = (data) => {
     
           <main>
             <h2>Dear ${data.name},</h2>
-            <p>You're cordially invited to ${data.organizerName}'s event on ${formatIsoDate(data.date)} titled ${event.name}.</p>
+            <p>You're cordially invited to ${data.organizerName}'s event on ${formatIsoDate(data.date)} titled ${data.title}.</p>
             <br />
     
             <p><b>Event Details</b></p>
