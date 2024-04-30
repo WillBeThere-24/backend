@@ -14,6 +14,10 @@ export const rsvpEvent = catchAsync(async (req, res) => {
         throw new AppError('Event does not exist', 400)
     }
 
+    if (event.start < Date.now()) {
+        throw new AppError('Event start time has elapsed', 405);
+    }
+
     const guest = await GuestModel.findOne({
         event: event,
         _id: req.query.guest,
