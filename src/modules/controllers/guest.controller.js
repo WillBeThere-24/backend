@@ -20,13 +20,17 @@ export const rsvpEvent = catchAsync(async (req, res) => {
         throw new AppError('This event is private.', 400)
     }
 
+    if (guest.attending !== null) {
+        throw new AppError('You have already responded to this event.', 400)
+    }
+
     return AppResponse(res, 200, '', { event: event, guest: guest })
 })
 
-export const updateRSVP = catchAsync(async (req, res) => {
-    const { id } = req.params
-    const { ...details } = req.body
-})
+// export const updateRSVP = catchAsync(async (req, res) => {
+//     const { id } = req.params
+//     const { ...details } = req.body
+// })
 
 export const confirmRSVP = catchAsync(async (req, res) => {
     const event = await EventModel.findById(req.params.id)
