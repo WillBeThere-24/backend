@@ -5,6 +5,7 @@ import { catchAsync } from '../../common/utils/errorHandler.js'
 import { UserModel } from '../schemas/user.schema.js'
 import { compareData, signData, setCookie } from '../../common/utils/helper.js'
 import { ENVIRONMENT } from '../../common/config/environment.js'
+import { EventModel } from '../schemas/event.schema.js'
 
 export const register = catchAsync(async (req, res) => {
     const { name, email, password, auth = 'local' } = req.body
@@ -82,10 +83,12 @@ export const login = catchAsync(async (req, res) => {
 
     const eventCount = await user.eventCount
     const rsvpCount = await user.rsvpCount
+    const latestThree = await EventModel.find({ user: user }).sort({ createdAt: -1 }).limit(3)
 
     return AppResponse(res, 200, 'Login successful', {
         ...UserEntityTransformer(updatedUser),
         eventCount,
         rsvpCount,
+        latestThree,
     })
 })
