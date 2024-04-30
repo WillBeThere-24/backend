@@ -93,6 +93,12 @@ export const sendRSVPMailTemplate = (data) => {
             li {
               list-style: none;
             }
+
+            .email-banner img {
+                display: block;
+                max-width: 30rem;
+                margin: 0 auto;
+            }
         </style>
     </head>
     <body>
