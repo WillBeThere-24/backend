@@ -30,7 +30,7 @@ app.use(
         origin: [
             'http://localhost:3000',
             'http://localhost:5173',
-            'http://192.168.0.167:5173/',
+            'http://192.168.0.167:5173',
             'https://willbethere.netlify.app',
         ],
         credentials: true,
