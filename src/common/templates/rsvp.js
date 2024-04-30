@@ -23,64 +23,122 @@ export const sendRSVPMailTemplate = (data) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Will Be There</title>
         <style>
-            * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            }
-        
             body {
-                display: flex;
+              background-color: #e0f9fd;
+            }
+      
+            .container {
+              display: block;
+              margin: 0 auto;
+              width: 100%;
+              background-color: #ffff;
+              max-width: 600px;
+              text-align: center;
+              padding: 50px;
+              color: #4e5254;
+              font-family: Georgia, "Times New Roman", Times, serif;
+            }
+      
+            .container header,
+            .container main {
+              width: 100%;
+              margin: 0 auto;
+            }
+      
+            header img {
+              width: 100px;
+            }
+      
+            h1 {
+              font-size: 30px;
+            }
+      
+            h2 {
+              text-align: left;
             }
 
-            .container{
-                margin: 40px
-            }
-        
-            p {
+            p, li {
                 font-size: 18px;
                 font-style: normal;
-                margin-bottom: 20px;
             }
-
-            #click {
-                color: white;
-                background-color: #45062E;
-                border-radius: 5px;
-                display: inline-block;
-                text-align: center;
-                padding: 10px 24px;
-                margin-bottom: 20px;
-                text-decoration: none;
-                font-weight: bold;
+      
+            .rsvp-link {
+              text-align: center;
             }
-
-            ul {
-                margin-left: 20px;
-                margin-bottom: 20px;
+      
+            button {
+              color: white;
+              font-size: 16px;
+              background-color: #45062E;
+              padding: 15px;
+              border-radius: 10px;
+              font-weight: bold;
+            }
+      
+            button:hover {
+              background-color: #45062E70;
+              border: 1px solid #45062E;
+            }
+      
+            footer {
+              margin-top: 30px;
+            }
+      
+            .floral-decoration img {
+              width: 150px;
+              height: auto;
+              opacity: 0.2;
+            }
+      
+            li {
+              list-style: none;
             }
         </style>
     </head>
     <body>
-    <div class="container">
-        <p>Dear ${data.name},</p>
-
-        <p>You're cordially invited to ${data.organizerName}'s event on ${formatIsoDate(data.date)}</p>
-
-        <p>🎉 Event Details 🎉</p>
-        <ul>
-            <li>Start Date: ${data.date.toString()}</li>
-            <li>End Date: ${data.endDate.toString()}</li>
-        </ul>
-
-        <p>RSVP to secure your spot at this exclusive event. Simply click below to confirm your attendance and let us know the number of guests accompanying you.</p>
-
-        <a id="click" href="${data.url}">RSVP</a>
-
-        <p>We can't wait to see you there and make memories that will last a lifetime!</p>
-
-        <p>Warm regards, <br>${data.organizerName}</p>
-    </div>
+        <div class="container">
+          <header>
+            <img src="https://res.cloudinary.com/horllameeday/image/upload/v1714471237/WillBeThere/flowers_kdgeec.png" alt="floral-arrangement" />
+          </header>
+    
+          <h1>You're Invited!</h1>
+    
+          <div class="email-banner">
+            <img src="${data.banner}" />
+          </div>
+    
+          <main>
+            <h2>Dear ${data.name},</h2>
+            <p>You're cordially invited to ${data.organizerName}'s event on ${formatIsoDate(data.date)} titled ${event.name}.</p>
+            <br />
+    
+            <p><b>Event Details</b></p>
+            <p>${data.details}</p>
+            <ul>
+                <li>Starts: ${data.date.toString()}</li>
+                <li>Ends: ${data.endDate.toString()}</li>
+            </ul>
+            <br />
+            
+            <p>RSVP to secure your spot at this exclusive event. Simply click below to confirm your attendance and let us know the number of guests accompanying you.</p>
+    
+          </main>
+    
+          <footer>
+            <div class="rsvp-link">
+              <a href="${data.url}" target="_blank">
+                <button class="btn">RSVP HERE</button>
+              </a>
+            </div>
+            <br />
+    
+            <p>We would be honored to have you join us for this memorable occasion. Your presence will truly make the celebration complete!</p>            
+          </footer>
+    
+          <div class="floral-decoration">
+            <img src="https://res.cloudinary.com/horllameeday/image/upload/v1714471227/WillBeThere/flowers-footer_azgm8w.png" alt="floral-decor" />
+          </div>
+        </div>
     </body>
 </html>`
 }

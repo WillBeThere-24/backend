@@ -143,6 +143,8 @@ export const inviteGuest = catchAsync(async (req, res) => {
             organizerName: user.name,
             date: date,
             endDate: endDate,
+            banner: event.image,
+            details: event.description,
             url: `https://willbethere.netlify.app/rsvp/${event.id}?guest=${guest.id}`,
         })
 
