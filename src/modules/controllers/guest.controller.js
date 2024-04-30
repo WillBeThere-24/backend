@@ -1,6 +1,9 @@
 import AppError from '../../common/utils/appError.js'
 import { AppResponse } from '../../common/utils/appResponse.js'
 import { catchAsync } from '../../common/utils/errorHandler.js'
+import { sendRSVPConfirmationMailTemplate } from '../../common/templates/rsvpConfirm.js'
+import { sendMail } from '../../common/utils/sendMail.js'
+import { UserModel } from '../schemas/user.schema.js'
 import { EventModel } from '../schemas/event.schema.js'
 import { GuestModel } from '../schemas/guest.schema.js'
 
@@ -26,11 +29,6 @@ export const rsvpEvent = catchAsync(async (req, res) => {
 
     return AppResponse(res, 200, '', { event: event, guest: guest })
 })
-
-// export const updateRSVP = catchAsync(async (req, res) => {
-//     const { id } = req.params
-//     const { ...details } = req.body
-// })
 
 export const confirmRSVP = catchAsync(async (req, res) => {
     const event = await EventModel.findById(req.params.id)
@@ -61,8 +59,28 @@ export const confirmRSVP = catchAsync(async (req, res) => {
         })
     }
 
+
     if (guestResponse.attending) {
-        // Send mail with event details (location)
+        const date = new Date(event.start)
+        const user = await UserModel.findById(event.user._id)
+        const joinPlusOnes = guestResponse.plus_ones.map(guest => guest.name).join(', ');
+        const eventItems = guestResponse.items.join(", ")
+
+        const plus = joinPlusOnes ? `<span>We're delighted to have ${joinPlusOnes} and you join us for this exciting event</span>` : `<span>We're delighted to have you join us for this exciting event</span>`;
+        const reminder = eventItems ? `<span>Remember to come along with ${eventItems}.</span>` : `<span></span>`;
+        
+        const template = sendRSVPConfirmationMailTemplate({
+            eventName: event.name,
+            organizerName: user.name,
+            date: date,
+            location: event.location,
+            plusMessage: plus,
+            reminderMessage: reminder,
+            guest: guestResponse.name,
+        })
+
+        await sendMail(guestResponse.email, `RSVP Confirmation for ${event.name}`, template)
+
         return AppResponse(
             res,
             200,
