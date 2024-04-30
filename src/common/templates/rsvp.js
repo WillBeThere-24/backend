@@ -23,82 +23,79 @@ export const sendRSVPMailTemplate = (data) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Will Be There</title>
         <style>
-            body {
-              background-color: #e0f9fd;
-            }
-      
-            .container {
-              display: block;
-              margin: 0 auto;
-              width: 100%;
-              background-color: #ffff;
-              max-width: 600px;
-              text-align: center;
-              padding: 50px;
-              color: #4e5254;
-              font-family: Georgia, "Times New Roman", Times, serif;
-            }
-      
-            .container header,
-            .container main {
-              width: 100%;
-              margin: 0 auto;
-            }
-      
-            header img {
-              width: 100px;
-            }
-      
-            h1 {
-              font-size: 30px;
-            }
-      
-            h2 {
-              text-align: left;
-            }
-
-            p, li {
-                font-size: 18px;
-                font-style: normal;
-            }
-      
-            .rsvp-link {
-              text-align: center;
-            }
-      
-            button {
-              color: white;
-              font-size: 16px;
-              background-color: #45062E;
-              padding: 15px;
-              border-radius: 10px;
-              font-weight: bold;
-            }
-      
-            button:hover {
-              background-color: #45062E70;
-              border: 1px solid #45062E;
-            }
-      
-            footer {
-              margin-top: 30px;
-            }
-      
-            .floral-decoration img {
-              width: 150px;
-              height: auto;
-              opacity: 0.2;
-            }
-      
-            li {
-              list-style: none;
-            }
-
-            .email-banner img {
-                display: block;
-                max-width: 30rem;
-                margin: 0 auto;
-            }
+          body {
+            background-color: #e0f9fd;
+          }
+    
+          .container {
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            background-color: #ffff;
+            max-width: 600px;
+            text-align: center;
+            padding: 50px;
+            color: #4e5254;
+            font-family: Avenir, Times, serif;
+          }
+    
+          .container header,
+          .container main {
+            width: 100%;
+            margin: 0 auto;
+          }
+    
+          header img {
+            width: 100px;
+          }
+    
+          h1 {
+            font-size: 28px;
+          }
+    
+          h1, h2 {
+            font-family: "Segoe UI", Inter !important;
+          }
+    
+          .rsvp-link {
+            text-align: center;
+          }
+    
+          button {
+            color: white;
+            font-size: 16px;
+            background-color: #45062E;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+          }
+    
+          button:hover {
+            background-color: #45062E70;
+            border: 1px solid #45062E;
+          }
+    
+          footer {
+            margin-top: 30px;
+          }
+    
+          .floral-decoration img {
+            width: 150px;
+            height: auto;
+            opacity: 0.2;
+          }
+    
+          li {
+            list-style: none;
+          }
+    
+          .email-banner img {
+            display: block;
+            width: 90%;
+            max-width: 30rem;
+            margin: 0 auto;
+            border-radius: 0.8rem;
+          }
         </style>
     </head>
     <body>

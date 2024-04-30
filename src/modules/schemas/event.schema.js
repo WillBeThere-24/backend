@@ -68,19 +68,24 @@ const eventSchema = new mongoose.Schema(
                 return GuestModel.countDocuments({ event: this, attending: null })
                 .then(count => count);
             }
-        },
-        // plusOnesGuestCount: {
-        //     type: Number,
-        //     virtual: true,
-        //     get: function() {
-        //         let plusOnes = 0;
-        //         const guests = GuestModel.find({ event: this, attending: true })
-        //         guests.forEach(guest => plusOnes += guest.plus_ones.length)
-        //         return plusOnes
-        //     }
-        // }
+        }
     },
     { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
+
+eventSchema.methods.getTotalPlusOnes = async function() {
+    let totalPlusOnes = 0;
+    
+    await GuestModel.aggregate([
+        { $match: { event: this._id, attending: true } },
+        { $unwind: '$plus_ones' },
+        { $group: { _id: null, totalPlusOnes: { $sum: 1 } } }
+      ])
+      .then(results => {
+        totalPlusOnes = results.length > 0 ? results[0].totalPlusOnes : 0;
+      });
+    
+    return totalPlusOnes;
+};
 
 export const EventModel = mongoose.model('Event', eventSchema)

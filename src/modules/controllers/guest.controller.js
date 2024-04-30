@@ -21,7 +21,7 @@ export const rsvpEvent = catchAsync(async (req, res) => {
     }
 
     if (guest.attending !== null) {
-        throw new AppError('You have already responded to this event.', 400)
+        return AppResponse(res, 200, 'You have already responded to this event.', null)
     }
 
     return AppResponse(res, 200, '', { event: event, guest: guest })

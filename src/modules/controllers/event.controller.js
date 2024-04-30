@@ -51,8 +51,9 @@ export const createEvent = catchAsync(async (req, res) => {
     const attendingGuestCount = await event.attendingGuestCount
     const notAttendingGuestCount = await event.notAttendingGuestCount
     const noResponseCount = await event.noResponseGuestCount
+    const plusOnesGuestCount = await event.getTotalPlusOnes()
 
-    return AppResponse(res, 201, 'Event Created Successfully', { ...eventData, attendingGuestCount, notAttendingGuestCount, noResponseCount })
+    return AppResponse(res, 201, 'Event Created Successfully', { ...eventData, attendingGuestCount, notAttendingGuestCount, noResponseCount, plusOnesGuestCount })
 })
 
 export const myEvents = catchAsync(async (req, res) => {
@@ -64,11 +65,14 @@ export const myEvents = catchAsync(async (req, res) => {
             const attendingGuestCount = await event.attendingGuestCount
             const notAttendingGuestCount = await event.notAttendingGuestCount
             const noResponseCount = await event.noResponseGuestCount
+            const plusOnesGuestCount = await event.getTotalPlusOnes()
+            
             return {
                 ...event.toObject(),
                 attendingGuestCount,
                 notAttendingGuestCount,
                 noResponseCount,
+                plusOnesGuestCount
             }
         })
     )
@@ -94,8 +98,9 @@ export const getEvent = catchAsync(async (req, res) => {
     const attendingGuestCount = await event.attendingGuestCount
     const notAttendingGuestCount = await event.notAttendingGuestCount
     const noResponseCount = await event.noResponseGuestCount
+    const plusOnesGuestCount = await event.getTotalPlusOnes()
 
-    return AppResponse(res, 200, '', { ...event._doc, attendingGuestCount, notAttendingGuestCount, noResponseCount })
+    return AppResponse(res, 200, '', { ...event._doc, attendingGuestCount, notAttendingGuestCount, noResponseCount, plusOnesGuestCount })
 })
 
 export const myRSVPs = catchAsync(async (req, res) => {
