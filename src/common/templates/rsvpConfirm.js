@@ -42,10 +42,9 @@ export const sendRSVPConfirmationMailTemplate = (data) => {
     
           .container {
             display: block;
-            margin: 0 auto;
-            max-width: 500px;
+            margin: 0 10px;
             height: 100%;
-            padding: 100px;
+            padding: 20px;
           }
     
           .head-section {
